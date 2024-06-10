@@ -17,7 +17,7 @@ recyclable_mats = [
     ["cans", "tins", "metals"]
 ]#The list of materials for the scrollable frame of recycling materials
 
-map_placeholder = CTkImage(Image.open("116FBDD6-F6B9-4C9B-A5D3-F2B33760A688.jpg"), size=(600,400))
+map_placeholder = CTkImage(Image.open("116FBDD6-F6B9-4C9B-A5D3-F2B33760A688.jpg"), size=(400,400))
 
 def transportation_car_info(): #Changes text box on transportation tab to car information
     transportation_info.configure(text="car stuff")
@@ -85,20 +85,30 @@ new_material.pack(pady=10)
 
 print(entry.get())
 
-transportation_info = CTkLabel(tabview.tab("Transportation"), text = "Transportation", width=100, height=70, corner_radius=10, font = ('Ebrima', 30))
-transportation_info.grid(row=0, column=0)
+transportation_info = CTkLabel(tabview.tab("Transportation"), text = "Transportation", width=500, height=100, corner_radius=10, font = ('Ebrima', 20))
+transportation_info.grid(row=6, column=2, pady=5, padx=10)
+
+location_entry = CTkEntry(tabview.tab("Transportation"), placeholder_text="Location:", width=500)
+location_entry.grid(row=4, column=2, pady=5)
+
+destination_entry = CTkEntry(tabview.tab("Transportation"), placeholder_text="Destination", width=500)
+destination_entry.grid(row=5, column=2)
 
 transportation_method_frame= CTkFrame(tabview.tab("Transportation"), width=50, height=50)
 transportation_method_frame.grid(row=1, column=0, pady=5)
+
+transportation_button_title = CTkLabel(transportation_method_frame, text = "Transportation Buttons", width=20, height=10, corner_radius=10, font = ('Ebrima', 15))
+transportation_button_title.grid(row=0, column=0, pady=10)
+
 car_button = CTkButton(transportation_method_frame, text="Car", width=100, height=50, command=transportation_car_info)
-car_button.grid(row=1, column=0, pady=5)
+car_button.grid(row=1, column=0, pady=5, padx=10)
 walk_button = CTkButton(transportation_method_frame, text="Walk", width=100, height=50, command=transportation_walk_info)
-walk_button.grid(row=2, column=0, pady=5)
+walk_button.grid(row=2, column=0, pady=5, padx=10)
 bike_button = CTkButton(transportation_method_frame, text="Bike", width=100, height=50, command=transportation_bike_info)
-bike_button.grid(row=3, column=0, pady=5)
+bike_button.grid(row=3, column=0, pady=5, padx=10)
 bus_button = CTkButton(transportation_method_frame, text="Bus", width=100, height=50, command=transportation_bus_info)
 
-map_for_now = CTkLabel(tabview.tab("Transportation"), image= map_placeholder, width = 600, height = 400)
+map_for_now = CTkLabel(tabview.tab("Transportation"), image= map_placeholder, width = 400, height = 400, corner_radius=10)
 map_for_now.grid(row=1, column=2)
 
 for mats in range(len(recyclable_mats)):
