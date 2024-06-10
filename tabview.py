@@ -1,26 +1,39 @@
 from tkinter import *
 from customtkinter import *
 from functools import partial
+from PIL import Image
 
-set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-set_default_color_theme("theme.json")  # Themes: "blue" (standard), "green", "dark-blue"
+set_appearance_mode("System")  #sets appearance mode same as system(doesn't matter much as I only have one mode, no light or dark mode)
+set_default_color_theme("theme.json")  #json file storage for the colours of my GUI
 
 root = CTk()
 
-root.title('tabs')
+root.title('CARBON')
 root.geometry('1200x700')
 
 recyclable_mats = [
     ["paper towels", "tissues", "food waste"],
     ["1 plastics", "2 plastics", "4 plastics"],
     ["cans", "tins", "metals"]
-]
+]#The list of materials for the scrollable frame of recycling materials
 
-root.grid_rowconfigure(0, weight=1)
+map_placeholder = CTkImage(Image.open("116FBDD6-F6B9-4C9B-A5D3-F2B33760A688.jpg"), size=(600,400))
 
-def window (material):
+def transportation_car_info(): #Changes text box on transportation tab to car information
+    transportation_info.configure(text="car stuff")
 
-    def bye():
+def transportation_walk_info(): #Changes text box on transportation tab to walking information
+    transportation_info.configure(text="walk stuff")
+
+def transportation_bike_info(): #Changes text box on transportation tab to biking information
+    transportation_info.configure(text="bike stuff")
+
+def transportation_bus_info():
+    transportation_info.configure(text="bus stuff")
+
+def window (material):  #Opens an information window of the different material buttons
+
+    def bye():  #Closes window when close button pressed
         woof.destroy()
         woof.update()
 
@@ -28,49 +41,65 @@ def window (material):
     woof.attributes("-topmost", True)
     woof.geometry("700x500")
     woof_bye = CTkButton(woof, text="Close", font = ('Ebrima', 30), command = bye)
-    woof_bye.grid(row=0, column=0, pady=200)
+    woof_bye.grid(row=1, column=3, pady=5)
     label = CTkLabel(woof, text=material.capitalize(), fg_color="transparent")
     label.grid(row=1, column=1, pady=10)
-   
-   
-sidebar_frame = CTkFrame(root, width=140, corner_radius=0)
-sidebar_frame.grid(row=0, column=0, rowspan=2, sticky="nsw")
+
+def newmats():  #Adds the new material requesrs to a list
+    new_material_requests.append(entry.get())
+    print(new_material_requests)
+
+root.grid_rowconfigure((0, 1, 2), weight=1)
+
+#Sidebar for homepage
+sidebar_frame = CTkFrame(root, width=140, height=200, corner_radius=0)
+sidebar_frame.grid(row=0, column=0, rowspan=2, sticky="nsew")
 sidebar_frame.grid_rowconfigure(2, weight=1)
 logo_label = CTkLabel(sidebar_frame, text="CustomTkinter", font=CTkFont(size=20, weight="bold"))
-logo_label.grid(row=0, column=0)
+logo_label.grid(row=0, column=0, pady=5)
 buttontt = CTkButton(sidebar_frame, text="shsf")
-buttontt.grid(row=1, column=0)
+buttontt.grid(row=1, column=0, pady=5)
 
-
-
-
-tabview = CTkTabview(root, width=700, height=500)
-tabview.grid(row=2, column=2, padx=20, pady=20)
+#Creates the three different tabs
+tabview = CTkTabview(root, width=700, height=700)
+tabview.grid(row=2, column=3, padx=40, pady=20, )
 
 tabview.add("Recycling")  # add tab at the end
 tabview.add("Transportation")  # add tab at the end
 tabview.add("Power")
 tabview.set("Recycling")  # set currently visible tab
 
-mats_frame = CTkScrollableFrame(tabview.tab("Recycling"), label_text="Materials", width=700, height=400)
+#Creates scrollable frame for buttons
+mats_frame = CTkScrollableFrame(tabview.tab("Recycling"), label_text="Materials",  width=500, height=400, label_font=('Ebrima', 20))
+mats_frame.pack(pady=5)
+mats_frame.pack(pady=5)
 
-entry = CTkEntry(root, placeholder_text="Enter New Material Here", width=500)
-entry.grid(row=3, column=3, pady=10)
+#Where user can input materials not on list
+entry = CTkEntry(tabview.tab("Recycling"), placeholder_text="Enter New Material Here", width=500)
+entry.pack(pady=15)#grid(#row=3, column=2, pady=10)
 
 new_material_requests = []
 
-def newmats():
-    new_material_requests.append(entry.get())
-    print(new_material_requests)
-
-new_material = CTkButton(root, text="Submit", command=newmats)
-new_material.grid(row=4, column=4, pady=10)
-
+new_material = CTkButton(tabview.tab("Recycling"), text="Submit", command=newmats)
+new_material.pack(pady=10)
 
 print(entry.get())
 
+transportation_info = CTkLabel(tabview.tab("Transportation"), text = "Transportation", width=100, height=70, corner_radius=10, font = ('Ebrima', 30))
+transportation_info.grid(row=0, column=0)
 
+transportation_method_frame= CTkFrame(tabview.tab("Transportation"), width=50, height=50)
+transportation_method_frame.grid(row=1, column=0, pady=5)
+car_button = CTkButton(transportation_method_frame, text="Car", width=100, height=50, command=transportation_car_info)
+car_button.grid(row=1, column=0, pady=5)
+walk_button = CTkButton(transportation_method_frame, text="Walk", width=100, height=50, command=transportation_walk_info)
+walk_button.grid(row=2, column=0, pady=5)
+bike_button = CTkButton(transportation_method_frame, text="Bike", width=100, height=50, command=transportation_bike_info)
+bike_button.grid(row=3, column=0, pady=5)
+bus_button = CTkButton(transportation_method_frame, text="Bus", width=100, height=50, command=transportation_bus_info)
 
+map_for_now = CTkLabel(tabview.tab("Transportation"), image= map_placeholder, width = 600, height = 400)
+map_for_now.grid(row=1, column=2)
 
 for mats in range(len(recyclable_mats)):
     for line in range(len(recyclable_mats[mats])):
@@ -82,8 +111,8 @@ for mats in range(len(recyclable_mats)):
         button = CTkButton(master=mats_frame, text = label, width=500, height=50, command=material_type)
         button.pack(pady=10)
         
-
-mats_frame.pack(pady=30)
 mats_frame.pack(pady=5)
+mats_frame.pack(pady=5)
+#transportation_info.pack(pady=30)
 
 root.mainloop()

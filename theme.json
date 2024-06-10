@@ -23,8 +23,8 @@
     },
     "CTkLabel": {
       "corner_radius": 0,
-      "fg_color": "#3C573B",
-      "text_color": ["gray14", "gray84"]
+      "fg_color": "#E6F3E6",
+      "text_color": ["#3C573B", "gray84"]
     },
     "CTkEntry": {
       "corner_radius": 6,
@@ -128,7 +128,7 @@
       "scrollbar_button_hover_color": ["gray40", "gray53"]
     },
     "CTkScrollableFrame": {
-      "label_fg_color": ["gray80", "gray21"]
+      "label_fg_color": ["#E6F3E6", "#E6F3E6"]
     },
     "DropdownMenu": {
       "fg_color": ["gray90", "gray20"],
