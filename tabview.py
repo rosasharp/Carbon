@@ -3,6 +3,15 @@ from customtkinter import *
 from functools import partial
 from PIL import Image
 
+import json
+import requests
+import urllib.parse
+import tomtom
+
+API_KEY = "OHxATlRctIBu8dHAiRIggj3pzhPGGKhj"
+
+map_placeholder = CTkImage(Image.open("116FBDD6-F6B9-4C9B-A5D3-F2B33760A688.jpg"), size=(400,400))
+
 set_appearance_mode("System")  #sets appearance mode same as system(doesn't matter much as I only have one mode, no light or dark mode)
 set_default_color_theme("theme.json")  #json file storage for the colours of my GUI
 
@@ -17,19 +26,20 @@ recyclable_mats = [
     ["cans", "tins", "metals"]
 ]#The list of materials for the scrollable frame of recycling materials
 
-map_placeholder = CTkImage(Image.open("116FBDD6-F6B9-4C9B-A5D3-F2B33760A688.jpg"), size=(400,400))
-
 def transportation_car_info(): #Changes text box on transportation tab to car information
     transportation_info.configure(text="car stuff")
 
 def transportation_walk_info(): #Changes text box on transportation tab to walking information
-    transportation_info.configure(text="walk stuff")
+    transportation_info.configure(text=walkin)
 
 def transportation_bike_info(): #Changes text box on transportation tab to biking information
     transportation_info.configure(text="bike stuff")
 
 def transportation_bus_info():
     transportation_info.configure(text="bus stuff")
+
+def display_distance(distance):
+    transportation_info.configure(text= distance)
 
 def window (material):  #Opens an information window of the different material buttons
 
@@ -48,6 +58,48 @@ def window (material):  #Opens an information window of the different material b
 def newmats():  #Adds the new material requesrs to a list
     new_material_requests.append(entry.get())
     print(new_material_requests)
+
+API_KEY = "OHxATlRctIBu8dHAiRIggj3pzhPGGKhj"
+
+def api_router(location_entry, destination_entry ):
+    final = tomtom.route(
+        API_KEY,
+       tomtom.geocode(API_KEY, location_entry.get()),
+        tomtom.geocode(API_KEY, destination_entry.get()),
+        "combustion",
+        "8.7438",
+        "eco"
+        )
+    with open("route.json", "w") as f:
+        json.dump(final, f)
+
+    kilometers = int(final["routes"][0]["summary"]["lengthInMeters"]) / 1000
+    minutes = int(final["routes"][0]["summary"]["travelTimeInSeconds"]) / 60
+    traffic = int(final["routes"][0]["summary"]["trafficDelayInSeconds"]) / 60
+
+    def time_variables =
+    
+
+
+    distance_string = (
+    f"Your destination is {kilometers} kilometers away and it will take {minutes} minutes to get there."
+    )
+    walking_time = (
+    f"Your destination is {kilometers} kilometers away and it will take {kilometers/4.8} minutes to get there."
+    )
+
+
+    if traffic > 0:
+        print(f"There is a traffic delay of {traffic} minutes.")
+
+    
+
+def locations():  #Adds the new material requesrs to a list
+    locations_list.append(entry.get())
+    print(location_entry.get())
+    print(destination_entry.get())
+    distance = api_router(location_entry, destination_entry)
+    display_distance(distance)
 
 root.grid_rowconfigure((0, 1, 2), weight=1)
 
@@ -85,14 +137,20 @@ new_material.pack(pady=10)
 
 print(entry.get())
 
-transportation_info = CTkLabel(tabview.tab("Transportation"), text = "Transportation", width=500, height=100, corner_radius=10, font = ('Ebrima', 20))
-transportation_info.grid(row=6, column=2, pady=5, padx=10)
+transportation_info = CTkLabel(tabview.tab("Transportation"), text = "", width=500, height=100, corner_radius=10, font = ('Ebrima', 20))
+transportation_info.grid(row=7, column=2, pady=5, padx=10)
 
 location_entry = CTkEntry(tabview.tab("Transportation"), placeholder_text="Location:", width=500)
 location_entry.grid(row=4, column=2, pady=5)
 
 destination_entry = CTkEntry(tabview.tab("Transportation"), placeholder_text="Destination", width=500)
 destination_entry.grid(row=5, column=2)
+
+location_entry_button = CTkButton(tabview.tab("Transportation"), text="Submit", command=locations)
+location_entry_button.grid(row=6, column=2)
+
+locations_list = []
+
 
 transportation_method_frame= CTkFrame(tabview.tab("Transportation"), width=50, height=50)
 transportation_method_frame.grid(row=1, column=0, pady=5)
@@ -126,3 +184,4 @@ mats_frame.pack(pady=5)
 #transportation_info.pack(pady=30)
 
 root.mainloop()
+
