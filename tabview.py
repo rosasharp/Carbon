@@ -26,11 +26,40 @@ recyclable_mats = [
     ["cans", "tins", "metals"]
 ]#The list of materials for the scrollable frame of recycling materials
 
-def transportation_car_info(): #Changes text box on transportation tab to car information
-    transportation_info.configure(text="car stuff")
+def api_router(location_entry, destination_entry):
+    final = tomtom.route(
+        API_KEY,
+       tomtom.geocode(API_KEY, location_entry.get()),
+        tomtom.geocode(API_KEY, destination_entry.get()),
+        "combustion",
+        "8.7438",
+        "eco"
+        )
+    with open("route.json", "w") as f:
+        json.dump(final, f)
 
-def transportation_walk_info(): #Changes text box on transportation tab to walking information
-    transportation_info.configure(text=walkin)
+    kilometers = int(final["routes"][0]["summary"]["lengthInMeters"]) / 1000
+    minutes = int(final["routes"][0]["summary"]["travelTimeInSeconds"]) / 60
+    traffic = int(final["routes"][0]["summary"]["trafficDelayInSeconds"]) / 60
+    
+
+
+    if traffic > 0:
+        print(f"There is a traffic delay of {traffic} minutes.")
+    
+    return [kilometers,minutes]
+
+
+def transportation_car_info(): #Changes text box on transportation tab to car information
+    transportation_info.configure(text=(
+    f"Your destination is {kilometers} kilometers away and it will take {minutes} minutes to get there."
+    ))
+
+def transportation_walk_info():
+    minutes=kilometers/4.8 #Changes text box on transportation tab to walking information
+    transportation_info.configure(text=(
+    f"Your destination is {kilometers} kilometers away and it will take {minutes} minutes to get there."
+    ))
 
 def transportation_bike_info(): #Changes text box on transportation tab to biking information
     transportation_info.configure(text="bike stuff")
@@ -59,47 +88,17 @@ def newmats():  #Adds the new material requesrs to a list
     new_material_requests.append(entry.get())
     print(new_material_requests)
 
-API_KEY = "OHxATlRctIBu8dHAiRIggj3pzhPGGKhj"
-
-def api_router(location_entry, destination_entry ):
-    final = tomtom.route(
-        API_KEY,
-       tomtom.geocode(API_KEY, location_entry.get()),
-        tomtom.geocode(API_KEY, destination_entry.get()),
-        "combustion",
-        "8.7438",
-        "eco"
-        )
-    with open("route.json", "w") as f:
-        json.dump(final, f)
-
-    kilometers = int(final["routes"][0]["summary"]["lengthInMeters"]) / 1000
-    minutes = int(final["routes"][0]["summary"]["travelTimeInSeconds"]) / 60
-    traffic = int(final["routes"][0]["summary"]["trafficDelayInSeconds"]) / 60
-
-    def time_variables =
-    
-
-
-    distance_string = (
-    f"Your destination is {kilometers} kilometers away and it will take {minutes} minutes to get there."
-    )
-    walking_time = (
-    f"Your destination is {kilometers} kilometers away and it will take {kilometers/4.8} minutes to get there."
-    )
-
-
-    if traffic > 0:
-        print(f"There is a traffic delay of {traffic} minutes.")
-
-    
-
 def locations():  #Adds the new material requesrs to a list
     locations_list.append(entry.get())
     print(location_entry.get())
     print(destination_entry.get())
     distance = api_router(location_entry, destination_entry)
     display_distance(distance)
+    
+
+def power_budget(budget):
+    print(budget)
+
 
 root.grid_rowconfigure((0, 1, 2), weight=1)
 
@@ -182,6 +181,17 @@ for mats in range(len(recyclable_mats)):
 mats_frame.pack(pady=5)
 mats_frame.pack(pady=5)
 #transportation_info.pack(pady=30)
+
+budget_input=CTkEntry(tabview.tab("Power"), placeholder_text="Power budget:", width=500)
+budget_input.grid(row=1, column=1)
+
+budget_list=[]
+
+budget_submit = CTkButton(tabview.tab("Power"), text="Submit", command=power_budget(budget_input.get()))
+budget_submit.grid(row=2, column=1)
+
+
+
 
 root.mainloop()
 
