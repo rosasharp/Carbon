@@ -111,7 +111,20 @@ def window (material):  #Opens an information window of the different material b
         label.configure(text = 'Number 3 plastics (PVC) aren’t recyclable and have to go into general waste. ')
 
     if material == 'Number 4 plastics':
-        label.configure(text = 'pp')
+        label.configure(text = '''Number 4 plastics that are hard/solid plastics are able to go in the kerbside recycling, 
+    but soft plastics have to go in the general waste or soft plastic recycling. 
+    Most supermarkets in New Zealand collect soft plastics for recycling''')
+        
+    if material == 'Number 5 plastics':
+        label.configure(text = 'All number 5 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks')
+
+    if material == 'Number 6 plastics':
+        label.configure(text = '''Number 6 plastics, or Polystyrene, are difficult to recycle. 
+    Polystyrene is harder to recycle, as EXPOL only has 25 locations nationwide 
+                        that collect and recycle polystyrene to turn into their products. ''')
+        
+    if material == 'Number 7 plastics':
+        label.configure(text = '')
 
 def newmats():  #Adds the new material requesrs to a list
     new_material_requests.append(entry.get())
