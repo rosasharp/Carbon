@@ -22,7 +22,7 @@ root.geometry('1200x700')
 
 recyclable_mats = [
     ["paper towels", "tissues", "food waste"],
-    ["1 plastics", "2 plastics", "4 plastics"],
+    ["number 1 plastics", "number 2 plastics", "number 3 plastics", "number 4 plastics", "number 5 plastics", "number 6 plastics", "number 7 plastics"],
     ["cans", "tins", "metals"]
 ]#The list of materials for the scrollable frame of recycling materials
 
@@ -79,10 +79,39 @@ def window (material):  #Opens an information window of the different material b
     woof = CTkToplevel(root)
     woof.attributes("-topmost", True)
     woof.geometry("700x500")
-    woof_bye = CTkButton(woof, text="Close", font = ('Ebrima', 30), command = bye)
-    woof_bye.grid(row=1, column=3, pady=5)
-    label = CTkLabel(woof, text=material.capitalize(), fg_color="transparent")
+    woof_bye = CTkButton(woof, text="Close", font = ('Ebrima', 30), command = bye, width=20, height=20)
+    woof_bye.grid(row=2, column=1, pady=5)
+    label = CTkLabel(woof, text=material, fg_color="transparent", font = ('Ebrima', 15), width = 50)
     label.grid(row=1, column=1, pady=10)
+
+    if material == 'Tissues':
+        label.configure(text = "Tissues can compost")
+
+    if material == 'Paper towels':
+        label.configure(text='Paper towels can compost')
+
+    if material == 'Food waste':
+        label.configure(text = 'Food waste can compost')
+
+    if material == 'Metals':
+        label.configure(text = '''New Zealand has great metal recycling systems, 
+        especially for metal, so just search up nearest place to recycle the metal type near you. 
+        This or take to a waste transfer station.''')
+
+    if material == 'Tins':
+        label.configure(text = "Tins can go in the regular council recycling bins that get collected by the kerbside recycling trucks")
+
+    if material == 'Number 1 plastics':
+        label.configure(text = 'Number 1 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks')
+
+    if material == 'Number 2 plastics':
+        label.configure(text = 'Number 2 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks')
+
+    if material == 'Number 3 plstics':
+        label.configure(text = 'Number 3 plastics (PVC) aren’t recyclable and have to go into general waste. ')
+
+    if material == 'Number 4 plastics':
+        label.configure(text = 'pp')
 
 def newmats():  #Adds the new material requesrs to a list
     new_material_requests.append(entry.get())
@@ -171,11 +200,12 @@ map_for_now.grid(row=1, column=2)
 for mats in range(len(recyclable_mats)):
     for line in range(len(recyclable_mats[mats])):
         label = recyclable_mats[mats][line].capitalize()
-        material_type = partial(window, recyclable_mats[mats][line])
+        #material_type = partial(window, recyclable_mats[mats][line])
 
 
     
-        button = CTkButton(master=mats_frame, text = label, width=500, height=50, command=material_type)
+        button = CTkButton(master=mats_frame, text = label, width=500, height=50)
+        button.configure(command = lambda l=label: window(l))
         button.pack(pady=10)
         
 mats_frame.pack(pady=5)
