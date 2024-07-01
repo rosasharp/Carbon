@@ -255,8 +255,6 @@ for mats in range(len(recyclable_mats)):
         label = recyclable_mats[mats][line].capitalize()
         #material_type = partial(window, recyclable_mats[mats][line])
 
-
-    
         button = CTkButton(master=mats_frame, text = label, width=500, 
         height=50)
         button.configure(command = lambda l=label: window(l))
