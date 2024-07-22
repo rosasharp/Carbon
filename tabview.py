@@ -42,7 +42,10 @@ recyclable_mats_dictionary = {
      "Number 7 plastics": "number 7 plastic stuff",
     "Cans" : "can stuff", 
     "Tins": "tin stuff", 
-    "Metals": "metal stuff"
+    "Metals":
+    '''New Zealand has great metal recycling systems, 
+especially for metal, so just search up nearest place to recycle the metal type
+near you. This or take to a waste transfer station.'''
 }
 
 
@@ -73,15 +76,15 @@ def api_router(location_entry, destination_entry):
     return [kilometers,minutes]
 
 
-def transportation_car_info(): #Changes text box on transportation tab to car information
+def transportation_car_info(distance): #Changes text box on transportation tab to car information
     transportation_info.configure(text=(
-    f"Your destination is {kilometers} kilometers away and it will take {minutes} minutes to get there."
+    f"Your destination is {distance[0]} kilometers away and it will take {distance[1]} minutes to get there."
     ))
 
-def transportation_walk_info():
-    minutes=kilometers/4.8 #Changes text box on transportation tab to walking information
+def transportation_walk_info(distance):
+    minutes=distance[0]/4.8 #Changes text box on transportation tab to walking information
     transportation_info.configure(text=(
-    f"Your destination is {kilometers} kilometers away and it will take {minutes} minutes to get there."
+    f"Your destination is {distance[0]} kilometers away and it will take {minutes} minutes to get there."
     ))
 
 def transportation_bike_info(): #Changes text box on transportation tab to biking information
@@ -163,7 +166,17 @@ def locations():  #Adds the new material requesrs to a list
     
 
 def power_budget(budget):
-    print(budget)
+    if budget.isnumeric():
+        budget_list.append(budget)
+        print(budget_list)
+        validation_info.configure(text = f"Your budget has been set as ${budget_list[-1]}NZD")
+        budget = budget_list[-1]
+    else:
+        validation_info.configure(text="incorrect input try again")
+
+
+
+
 
 
 root.grid_rowconfigure((0, 1, 2), weight=1)
@@ -235,10 +248,12 @@ font = ('Ebrima', 15))
 transportation_button_title.grid(row=0, column=0, pady=10)
 
 car_button = CTkButton(transportation_method_frame, text="Car", width=100, 
-height=50, command=transportation_car_info)
+height=50, 
+command=lambda:transportation_car_info(transportation_info.cget("text")))
 car_button.grid(row=1, column=0, pady=5, padx=10)
 walk_button = CTkButton(transportation_method_frame, text="Walk", width=100, 
-height=50, command=transportation_walk_info)
+height=50, 
+command=lambda:transportation_walk_info(transportation_info.cget("text")))
 walk_button.grid(row=2, column=0, pady=5, padx=10)
 bike_button = CTkButton(transportation_method_frame, text="Bike", width=100, 
 height=50, command=transportation_bike_info)
@@ -273,9 +288,16 @@ budget_input.grid(row=1, column=1)
 budget_list=[]
 
 budget_submit = CTkButton(tabview.tab("Power"), text="Submit", 
-command=power_budget(budget_input.get()))
+command=lambda: power_budget(budget_input.get()))
 budget_submit.grid(row=2, column=1)
 
+validation_info= CTkLabel(tabview.tab("Power"), text = "")
+validation_info.grid(row=2, column=2)
+
+solar_button= CTkButton(tabview.tab("Power"), text = "Solar Power")
+solar_button.grid(row=3, column=1)
+
+hydro_button = CTkButton(tabview.tab("Power"), text = "Hydro Power")
 
 
 
