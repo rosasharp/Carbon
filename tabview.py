@@ -289,13 +289,13 @@ budget_list=[]
 
 budget_submit = CTkButton(tabview.tab("Power"), text="Submit", 
 command=lambda: power_budget(budget_input.get()))
-budget_submit.grid(row=2, column=1)
+budget_submit.grid(row=1, column=2)
 
 validation_info= CTkLabel(tabview.tab("Power"), text = "")
-validation_info.grid(row=2, column=2)
+validation_info.grid(row=2, column=1, pady=20)
 
 solar_button= CTkButton(tabview.tab("Power"), text = "Solar Power")
-solar_button.grid(row=3, column=1)
+solar_button.grid(row=3, column=1, pady=40)
 
 hydro_button = CTkButton(tabview.tab("Power"), text = "Hydro Power")
 

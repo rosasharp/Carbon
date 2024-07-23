@@ -23,8 +23,8 @@
     },
     "CTkLabel": {
       "corner_radius": 0,
-      "fg_color": "#E6F3E6",
-      "text_color": ["#3C573B", "gray84"]
+      "fg_color": "#3C573B",
+      "text_color": ["#DCE4EE", "gray84"]
     },
     "CTkEntry": {
       "corner_radius": 6,
