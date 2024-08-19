@@ -7,34 +7,49 @@ import json
 import requests
 import urllib.parse
 import tomtom
+import time
+
 
 class APIRouter:
     def __init__(self):
         self.kilometers=0
         self.minutes=0
-    def route(self, location, destination, API_KEY):
-        final = tomtom.route(
-            API_KEY,
-        tomtom.geocode(API_KEY, location),
-            tomtom.geocode(API_KEY, destination),
-            "combustion",
-            "8.7438",
-            "eco"
-            )
-        with open("route.json", "w") as f:
-            json.dump(final, f)
-            #uses information from json file to get information for API for transportation function
+    def route(self, location, destination, API_KEY, validation_box):
+        try:
+            final = tomtom.route(
+                API_KEY,
+            tomtom.geocode(API_KEY, location.get()),
+                tomtom.geocode(API_KEY, destination.get()),
+                "combustion",
+                "8.7438",
+                "eco"
+                )
+            with open("route.json", "w") as f:
+                json.dump(final, f)
+#uses information from json file for API for transportation function
 
-        self.kilometers = int(final["routes"][0]["summary"]["lengthInMeters"]) / 1000
-        self.minutes = int(final["routes"][0]["summary"]["travelTimeInSeconds"]) / 60
+            self.kilometers = int(
+                final["routes"][0]["summary"]["lengthInMeters"]
+            ) / 1000
+            self.minutes = int(
+                final["routes"][0]["summary"]["travelTimeInSeconds"]
+            ) / 60
+            validation_box.configure(text="Valid address," +
+            "please choose a transportation method.")
+            car_button._state = 'normal'
+        except:
+            validation_box.configure(text="Invalid address. Input again.")
+            car_button._state = 'disabled'
+           
 
 API_KEY = "OHxATlRctIBu8dHAiRIggj3pzhPGGKhj"
 
 map_placeholder =CTkImage(Image.open("116FBDD6-F6B9-4C9B-A5D3-F2B33760A688.jpg")
 , size=(400,400))
-
-set_appearance_mode("System")  #sets appearance mode same as system(doesn't matter much as I only have one mode, no light or dark mode)
-set_default_color_theme("theme.json")  #json file storage for the colours of my GUI
+#sets appearance mode same as system(doesn't matter much as I only have one)
+set_appearance_mode("System")  
+set_default_color_theme("theme.json")  
+#json file storage for the colours of my GUI
 
 root = CTk()
 router = APIRouter()
@@ -54,18 +69,27 @@ recyclable_mats_dictionary = {
     "Paper towels": "paper towels can compost", 
     "Tissues": "tissues can compost",
     "Food waste": "food waste can compost",
-    "Number 1 plastics": "Number 1 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks.", 
-    "Number 2 plastics":'Number 2 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks.', 
-    "Number 3 plastics": 'Number 3 plastics (PVC) aren’t recyclable and have to go into general waste.', 
+    "Number 1 plastics": 
+    '''Number 1 plastics can go in the regular council 
+    recycling bins that get collected by the kerbside recycling trucks.''', 
+    "Number 2 plastics":
+    '''Number 2 plastics can go in the regular council 
+    recycling bins that get collected by the kerbside recycling trucks.''', 
+    "Number 3 plastics": 
+    '''Number 3 plastics (PVC) aren’t recyclable 
+        and have to go into general waste.''', 
      "Number 4 plastics": 
-     '''Number 4 plastics that are hard/solid plastics are able to go in the kerbside recycling, 
-     but soft plastics have to go in the general waste or soft plastic recycling. 
-     Most supermarkets in New Zealand collect soft plastics for recycling''', 
-     "Number 5 plastics" : 'All number 5 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks', 
+     '''Number 4 plastics that are hard/solid plastics are able to go in the 
+     kerbside recycling, but soft plastics have to go in the general waste or 
+     soft plastic recycling. Most supermarkets in New Zealand 
+        collect soft plastics for recycling''', 
+     "Number 5 plastics" : 
+     '''All number 5 plastics can go in the regular council 
+     recycling bins that get collected by the kerbside recycling trucks.''', 
      "Number 6 plastics": 
      '''Number 6 plastics, or Polystyrene, are difficult to recycle. 
      Polystyrene is harder to recycle, as EXPOL only has 25 locations nationwide 
-                         that collect and recycle polystyrene to turn into their products. ''', 
+        that collect and recycle polystyrene to turn into their products. ''', 
      "Number 7 plastics": "number 7 plastic stuff",
     "Cans" : "can stuff", 
     "Tins": 
@@ -79,147 +103,117 @@ near you. This or take to a waste transfer station.'''
 #information about the materials
 
 power_method_dictionary = {
-    "Solar Power": '''Solar energy is very efficient as it works in all weather types, 
-    and creates more than enough energy for heat, cooling, electricity and everything else. 
-    It’s only slightly unreliable sometimes, depending on location.''',
-    "Hydro Power": "Hydro power stuff"
-
+    "Solar Power": 
+'''Solar energy is very efficient as it works in all weather types, and 
+creates more than enough energy for heat, cooling, electricity and everything 
+else. It’s only slightly unreliable sometimes, depending on location.''',
+    "Hydro Power": "Hydro power stuff",
+    "Wind Power": "wind power stuff",
+    "Geothermal Power": "geothermal stuff",
+    "Bio Power": "bio power stuff"
 
 
 }
-
-
-
-
-
-
-
-def transportation_car_info(): #Changes text box on transportation tab to car information
+#Changes text box on transportation tab to car information
+def transportation_car_info(): 
     transportation_info.configure(text=(
-    f"Your destination is {router.kilometers} kilometers away and it will take {router.minutes} minutes to get there."
+    f"Your destination is {round(router.kilometers, 2)} kilometers away and " +
+    "it will take {round(router.minutes,2)} minutes to get there."
     ))
-    # transportation_info.configure = distance
 
+    if router.kilometers < 3:
+        transport_rec.configure(text = 
+    '''Because this journey is less than 3km away, 
+    walking would be the most carbon friendly mode of of transportation. 
+    Select the walk option to see how long it will take.''')
+        
+    elif router.kilometers <6: 
+        transport_rec.configure(text = 
+    '''Because this journey is less than 6km away, 
+    biking would be the most carbon friendly mode of of transportation. 
+    Select the bike option to see how long it will take.''')
+        
+    else:
+        transport_rec.configure(text="")
+
+#Changes text box on transportation tab to walking information
 def transportation_walk_info():
-    time_in_minutes=int(int(router.kilometers))/4.8 #Changes text box on transportation tab to walking information
+    time_in_minutes=int(router.kilometers)*4.8 
     transportation_info.configure(text=(
-    f"Your destination is {router.kilometers} kilometers away and it will take {time_in_minutes} minutes to get there."
+    f"Your destination is {round(router.kilometers, 2)} kilometers away and" +
+    " it will take {round(time_in_minutes, 2)} minutes to get there."
     ))
-    # transportation_info.configure = distance
-
-def transportation_bike_info(): #Changes text box on transportation tab to biking information
-    transportation_info.configure(text="bike stuff")
-
+    transport_rec.configure(text = "")
+  
+#Changes text box on transportation tab to biking information
+def transportation_bike_info(): 
+    time_in_minutes=int(router.kilometers)*1.7
+    transportation_info.configure(text=(
+    f"Your destination is {router.kilometers} kilometers away and it will" +
+    " take {time_in_minutes} minutes to get there."
+    ))
 def transportation_bus_info():
     transportation_info.configure(text="bus stuff")
 
 def display_distance(distance):
     transportation_info.configure(text= distance)
 
-def window (material):  #Opens an information window of the different material buttons
+def window (material):  
+#Opens an information window of the different material buttons
 
-    def bye():  #Closes window when close button pressed
+    #Closes window when close button pressed
+    def bye():  
         woof.destroy()
         woof.update()
 
     woof = CTkToplevel(root)
+    woof.grid_columnconfigure(0, weight=1)
+    woof.grid_rowconfigure(0, weight=1)
     woof.attributes("-topmost", True)
     woof.geometry("700x500")
     woof_bye = CTkButton(woof, text="Close", font = ('Ebrima', 30), 
     command = bye, width=20, height=20)
-    woof_bye.grid(row=2, column=1, pady=5)
-    label = CTkLabel(woof, text=material, text_color="#DCE4EE",
-    font = ('Ebrima', 15), width = 50)
-    label.grid(row=1, column=1, pady=10)
-
-    # if material == 'Tissues':
-    #     label.configure(text = "Tissues can compost")
-
-    # if material == 'Paper towels':
-    #     label.configure(text='Paper towels can compost')
-
-    # if material == 'Food waste':
-    #     label.configure(text = 'Food waste can compost')
-
-    # if material == 'Metals':
-    #     label.configure(text = '''New Zealand has great metal recycling systems, 
-    #     especially for metal, so just search up nearest place to recycle the metal type near you. 
-    #     This or take to a waste transfer station.''')
-
-    # if material == 'Tins':
-    #     label.configure(text = "Tins can go in the regular council recycling bins that get collected by the kerbside recycling trucks")
-
-    # if material == 'Number 1 plastics':
-    #     label.configure(text = 'Number 1 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks')
-
-    # if material == 'Number 2 plastics':
-    #     label.configure(text = 'Number 2 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks')
-
-    # if material == 'Number 3 plstics':
-    #     label.configure(text = 'Number 3 plastics (PVC) aren’t recyclable and have to go into general waste. ')
-
-    # if material == 'Number 4 plastics':
-    #     label.configure(text = '''Number 4 plastics that are hard/solid plastics are able to go in the kerbside recycling, 
-    # but soft plastics have to go in the general waste or soft plastic recycling. 
-    # Most supermarkets in New Zealand collect soft plastics for recycling''')
-        
-    # if material == 'Number 5 plastics':
-    #     label.configure(text = 'All number 5 plastics can go in the regular council recycling bins that get collected by the kerbside recycling trucks')
-
-    # if material == 'Number 6 plastics':
-    #     label.configure(text = '''Number 6 plastics, or Polystyrene, are difficult to recycle. 
-    # Polystyrene is harder to recycle, as EXPOL only has 25 locations nationwide 
-    #                     that collect and recycle polystyrene to turn into their products. ''')
-        
+    woof_bye.grid(row=1, column=0, pady=5, sticky="s")
+    label = CTkLabel(woof, text=material, text_color="#DCE4EE", 
+    corner_radius=10,
+    font = ('Ebrima', 20), width = 50)
+    label.grid(row=0, column=0, pady=10, )
     label.configure(text = recyclable_mats_dictionary[material])
 
-def newmats():  #Adds the new material requesrs to a list
+#Adds the new material requesrs to a list
+def newmats():  
     new_material_requests.append(entry.get())
     print(new_material_requests)
 
-# def locations():  #Finds the distance and gets the locations user inputs
-#     locations_list.append(entry.get())
-#     print(location_entry.get())
-#     print(destination_entry.get())
-#     distance = api_router(location_entry, destination_entry)
-#     display_distance(distance)
-    
-
-def power_budget(budget):  #Makes sure the budget input is numeric and presents this to the user
+#Makes sure the budget input is numeric and presents this to the user
+def power_budget(budget): 
     if budget.isnumeric():
         budget_list.append(budget)
         print(budget_list)
-        validation_info.configure(text = f"Your budget has been set as ${budget_list[-1]}NZD")
+        validation_info.configure(text = 
+        f"Your budget has been set as ${budget_list[-1]}NZD")
         budget = budget_list[-1]
     else:
-        validation_info.configure(text="incorrect input try again")
-        solar_button.state = "disabled"
-        hydro_button.state = "disabled"
+        validation_info.configure(text="incorrect input try again", 
+        font=('Ebrima', 20))
+        solar_button._state = "disabled"
+        hydro_button._state = "disabled"
 
     if int(budget_list[-1]) < 12000:
-        power_availablility.configure(text = "Solar Power costs more than 12000 to install")
+        power_availablility.configure(text = 
+        "Solar Power costs more than 12000 to install", font=('Ebrima', 15))
         power_information.configure(text="")
         solar_button._state = "disabled"
 
     else:
         power_availablility.configure(text="")
         solar_button._state = "normal"
-
-
-       
-
-    
+        hydro_button._state="normal"
 
 def power_info(power, power_information):
-    
 
-    power_information.configure(text = power_method_dictionary[power])
-
-
-
-
-
-
+    power_information.configure(text = power_method_dictionary[power], 
+    font =('Ebrima', 20))
 
 root.grid_rowconfigure((0, 1, 2), weight=1)
 
@@ -262,70 +256,80 @@ new_material.pack(pady=10)
 
 print(entry.get())
 
-transportation_info = CTkLabel(tabview.tab("Transportation"), text = "", 
-width=500, height=100, corner_radius=10, font = ('Ebrima', 20), text_color= "#DCE4EE")
-transportation_info.grid(row=7, column=2, pady=5, padx=10)
+transportation_method_frame= CTkFrame(tabview.tab("Transportation"), 
+width=50, height=50)
+transportation_method_frame.grid(row=1, column=0, pady=5)
+transportation_method_frame.grid_columnconfigure(0, weight=1)
+transportation_method_frame.grid_rowconfigure(0, weight=1)
+
+transportation_info = CTkLabel(transportation_method_frame, text = "", 
+width=500, height=100, corner_radius=10, font = ('Ebrima', 20), 
+text_color= "#DCE4EE")
+transportation_info.grid(row=7, column=2, pady=5, padx=10, sticky="s")
 #Transportation label with information about it
 
-location_entry = CTkEntry(tabview.tab("Transportation"), 
+location_entry = CTkEntry(transportation_method_frame, 
 placeholder_text="Location:", width=500)
-location_entry.grid(row=4, column=2, pady=5)
+location_entry.grid(row=4, column=2, pady=5, sticky="s")
 #User inputs location
 
-destination_entry = CTkEntry(tabview.tab("Transportation"), 
+destination_entry = CTkEntry(transportation_method_frame, 
 placeholder_text="Destination", width=500)
-destination_entry.grid(row=5, column=2)
+destination_entry.grid(row=5, column=2, sticky="s")
 #User inputs destination
 
-location_entry_button = CTkButton(tabview.tab("Transportation"), 
-text="Submit", command= lambda: router.route(location_entry.get(), destination_entry.get(), API_KEY))
-location_entry_button.grid(row=6, column=2)
+location_entry_button = CTkButton(transportation_method_frame, 
+text="Submit", command= lambda: router.route(location_entry, destination_entry, 
+API_KEY, validation_box))
+location_entry_button.grid(row=6, column=2, sticky="s")
 #User submits location and destination
 
 locations_list = []
 
 
-transportation_method_frame= CTkFrame(tabview.tab("Transportation"), 
-width=50, height=50)
-transportation_method_frame.grid(row=1, column=0, pady=5)
 #Frame for the transportation methods to be displatyed
 
-input_info = CTkLabel(tabview.tab("Transportation"), width=200, height=50, text = 
-"Please input the addresses as 'number street name, suburb, city'. Otherwise it won't be valid", text_color= "#DCE4EE")
-input_info.grid(row=2, column=2)
+input_info = CTkLabel(transportation_method_frame, width=200, height=50, text = 
+"Please input the addresses as 'number street name, suburb, city'." +
+ " Otherwise it won't be valid", 
+text_color= "#DCE4EE")
+input_info.grid(row=2, column=2, sticky="s")
 
 transportation_button_title = CTkLabel(transportation_method_frame, 
 text = "Transportation Buttons", width=20, height=10, corner_radius=10, 
 font = ('Ebrima', 15))
-transportation_button_title.grid(row=0, column=0, pady=10)
+transportation_button_title.grid(row=0, column=0, pady=10, sticky="n")
 #Title above where transportation methods are
 
 car_button = CTkButton(transportation_method_frame, text="Car", width=100, 
 height=50, 
 command=transportation_car_info)
-car_button.grid(row=1, column=0, pady=5, padx=10)
+car_button.grid(row=1, column=0, pady=5, padx=10, sticky="w")
 walk_button = CTkButton(transportation_method_frame, text="Walk", width=100, 
 height=50, 
 command=transportation_walk_info)
-walk_button.grid(row=2, column=0, pady=5, padx=10)
+walk_button.grid(row=2, column=0, pady=5, padx=10, sticky="w")
 bike_button = CTkButton(transportation_method_frame, text="Bike", width=100, 
 height=50, command=transportation_bike_info)
-bike_button.grid(row=3, column=0, pady=5, padx=10)
+bike_button.grid(row=3, column=0, pady=5, padx=10, sticky="w")
 bus_button = CTkButton(transportation_method_frame, text="Bus", width=100, 
 height=50, command=transportation_bus_info)
+bus_button.grid(row=4, column=0, pady=5, padx=10, sticky="w")
 #Transportation method buttons
 
-#map_for_now = CTkLabel(tabview.tab("Transportation"), image= map_placeholder, 
-#width = 400, height = 400, corner_radius=10)
-#map_for_now.grid(row=1, column=2)
+validation_box = CTkLabel(tabview.tab("Transportation"), text = "", 
+text_color="#DCE4EE")
+validation_box.grid(row=3, column=1, sticky="s")
 
-for mats in range(len(recyclable_mats)): #Opens a window when the user presses a material button
+transport_rec = CTkLabel(tabview.tab("Transportation"), text = "", 
+text_color="#DCE4EE")
+transport_rec.grid(row =5, column =0, sticky="s")
+
+#Opens a window when the user presses a material button
+for mats in range(len(recyclable_mats)): 
     for line in range(len(recyclable_mats[mats])):
         label = recyclable_mats[mats][line].capitalize()
         
-
-
-    
         button = CTkButton(master=mats_frame, text = label, width=500, 
         height=50)
         button.configure(command = lambda l=label: window(l))
@@ -347,30 +351,37 @@ command=lambda: power_budget(budget_input.get()))
 budget_submit.grid(row=1, column=2)
 #User submits budget and it's validated
 
-validation_info= CTkLabel(tabview.tab("Power"), text = "", text_color= "#DCE4EE")
+validation_info= CTkLabel(tabview.tab("Power"), text = "", 
+text_color= "#DCE4EE")
 validation_info.grid(row=2, column=1, pady=20)
 #Displays to the user if their data is valid
 
-power_information = CTkLabel(tabview.tab("Power"), text = "", text_color="#DCE4EE")
-power_information.grid(row = 2, column=3)
+power_information = CTkLabel(tabview.tab("Power"), text = "", 
+text_color="#DCE4EE")
+power_information.grid(row = 5, column=2)
 
-solar_button= CTkButton(tabview.tab("Power"), text = "Solar Power", command= lambda: power_info("Solar Power", power_information))
+solar_button= CTkButton(tabview.tab("Power"), text = "Solar Power", 
+command= lambda: power_info("Solar Power", power_information))
 solar_button.grid(row=3, column=1, pady=20)
 
-hydro_button = CTkButton(tabview.tab("Power"), text = "Hydro Power", command = lambda: power_info("Hydro Power", power_information))
-hydro_button. grid(row=4, column=1, pady=20)
+hydro_button = CTkButton(tabview.tab("Power"), text = "Hydro Power", 
+command = lambda: power_info("Hydro Power", power_information))
+hydro_button.grid(row=4, column=1, pady=20)
 
+wind_power_button = CTkButton(tabview.tab("Power"), text = "Wind Power", 
+command = lambda: power_info("Wind Power", power_information))
+wind_power_button.grid(row=5, column=1, pady=20)
 #Power type buttons to display the information about them
 
-power_availablility = CTkLabel(tabview.tab("Power"), text = "", text_color="#DCE4EE")
+geothermal_button = CTkButton(tabview.tab("Power"), text = "Geothermal Power", 
+command = lambda: power_info("Geothermal Power", power_information))
+geothermal_button.grid(row=6, column=1, pady=20)
+
+bioenergy_button = CTkButton(tabview.tab("Power"), text = "Bio Power", 
+command = lambda: power_info("Bio Power", power_information))
+bioenergy_button.grid(row=7, column=1, pady=20)
+power_availablility = CTkLabel(tabview.tab("Power"), text = "", 
+text_color="#DCE4EE")
 power_availablility.grid(row=4, column=2)
-
-
-
-
-
-
-
-
 
 root.mainloop()
