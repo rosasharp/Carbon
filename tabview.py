@@ -66,9 +66,15 @@ recyclable_mats = [
 ]#The list of materials for the scrollable frame of recycling materials
 
 recyclable_mats_dictionary = { 
-    "Paper towels": "paper towels can compost", 
-    "Tissues": "tissues can compost",
-    "Food waste": "food waste can compost",
+    "Paper towels": 
+    '''Paper towels can be composted. Compost bins are a great thing to have, 
+    to put food scraps in. It reduces waste and can be useful for gardening.''', 
+    "Tissues": 
+    '''Tissues can be composted. Compost bins are a great thing to have, 
+    to put food scraps in. It reduces waste and can be useful for gardening.''',
+    "Food waste":
+    '''Food waste can be composted. Compost bins are a great thing to have, 
+    to put food scraps in. It reduces waste and can be useful for gardening.''',
     "Number 1 plastics": 
     '''Number 1 plastics can go in the regular council 
     recycling bins that get collected by the kerbside recycling trucks.''', 
@@ -91,10 +97,12 @@ recyclable_mats_dictionary = {
      Polystyrene is harder to recycle, as EXPOL only has 25 locations nationwide 
         that collect and recycle polystyrene to turn into their products. ''', 
      "Number 7 plastics": "number 7 plastic stuff",
-    "Cans" : "can stuff", 
+    "Cans" :   
+    '''Cans can go in the regular council recycling bins 
+    that get collected by the kerbside recycling trucks''', 
     "Tins": 
     '''Tins can go in the regular council recycling bins 
-    that get collected by the kerbside recycling trucks"''', 
+    that get collected by the kerbside recycling trucks''', 
     "Metals":
     '''New Zealand has great metal recycling systems, 
 especially for metal, so just search up nearest place to recycle the metal type
@@ -118,7 +126,7 @@ else. It’s only slightly unreliable sometimes, depending on location.''',
 def transportation_car_info(): 
     transportation_info.configure(text=(
     f"Your destination is {round(router.kilometers, 2)} kilometers away and " +
-    "it will take {round(router.minutes,2)} minutes to get there."
+    f"it will take {round(router.minutes,2)} minutes to get there."
     ))
 
     if router.kilometers < 3:
@@ -134,26 +142,49 @@ def transportation_car_info():
     Select the bike option to see how long it will take.''')
         
     else:
-        transport_rec.configure(text="")
+        transport_rec.configure(text='''
+        Although driving is the most common form of transportation, 
+        and is practical for longer journeys, it is the least carbon friendly 
+        due to the emissions from cars. For shorter journeys, please consider 
+        walking or biking. For longer journeys, public transportation 
+        is another more carbon friendly option.''')
 
 #Changes text box on transportation tab to walking information
 def transportation_walk_info():
     time_in_minutes=int(router.kilometers)*4.8 
     transportation_info.configure(text=(
     f"Your destination is {round(router.kilometers, 2)} kilometers away and" +
-    " it will take {round(time_in_minutes, 2)} minutes to get there."
+    f" it will take {round(time_in_minutes, 2)} minutes to get there."
     ))
-    transport_rec.configure(text = "")
+    transport_rec.configure(text = ''' 
+    Walking is a very carbon efficient mode of transportation, 
+    producing no carbon footprint and allowing for excercise. 
+    For journeys less than 3km, this is highly recommended.''')
   
 #Changes text box on transportation tab to biking information
 def transportation_bike_info(): 
     time_in_minutes=int(router.kilometers)*1.7
     transportation_info.configure(text=(
     f"Your destination is {router.kilometers} kilometers away and it will" +
-    " take {time_in_minutes} minutes to get there."
+    f" take {time_in_minutes} minutes to get there."
     ))
+    
+    transport_rec.configure(text = ''' 
+    Biking is a very carbon efficient mode of transportation, 
+    producing no carbon footprint and allowing for excercise. 
+    For journeys less than 6km, this is highly recommended.''')
+
 def transportation_bus_info():
-    transportation_info.configure(text="bus stuff")
+    time_in_minutes=int(router.kilometers)*2
+    transportation_info.configure(text = (
+    f"Your destination is {round(router.kilometers, 2)} kilometers away and " +
+    f"it will take {round(time_in_minutes,2)} minutes to get there."))
+
+    transport_rec.configure(text = ''' 
+    Busing is more efficient than driving, as you are sharing the 
+    carbon emissions amongst many people when on public transportation. 
+    If you live by bus stops, and it is an option, 
+    busing instead of taking one car is highly recommended.''')
 
 def display_distance(distance):
     transportation_info.configure(text= distance)
@@ -228,8 +259,8 @@ buttontt = CTkButton(sidebar_frame, text="shsf")
 buttontt.grid(row=1, column=0, pady=5)
 
 #Creates the three different tabs
-tabview = CTkTabview(root, width=700, height=700)
-tabview.grid(row=2, column=3, padx=40, pady=20, )
+tabview = CTkTabview(root, width=900, height=700)
+tabview.grid(row=2, column=3, padx=40, pady=20)
 
 tabview.add("Recycling")  # add tab at the end
 tabview.add("Transportation")  # add tab at the end
@@ -317,12 +348,12 @@ height=50, command=transportation_bus_info)
 bus_button.grid(row=4, column=0, pady=5, padx=10, sticky="w")
 #Transportation method buttons
 
-validation_box = CTkLabel(tabview.tab("Transportation"), text = "", 
+validation_box = CTkLabel(transportation_method_frame, text = "", 
 text_color="#DCE4EE")
-validation_box.grid(row=3, column=1, sticky="s")
+validation_box.grid(row=3, column=2, sticky="n")
 
 transport_rec = CTkLabel(tabview.tab("Transportation"), text = "", 
-text_color="#DCE4EE")
+text_color="#DCE4EE", font = ('Ebrima', 15), width=400, height=100)
 transport_rec.grid(row =5, column =0, sticky="s")
 
 #Opens a window when the user presses a material button
