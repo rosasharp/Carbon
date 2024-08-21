@@ -9,7 +9,7 @@ import urllib.parse
 import tomtom
 import time
 
-
+'''Class takes in locations to output route json'''
 class APIRouter:
     def __init__(self):
         self.kilometers=0
@@ -27,25 +27,30 @@ class APIRouter:
             with open("route.json", "w") as f:
                 json.dump(final, f)
 #uses information from json file for API for transportation function
-
+            #validation
             self.kilometers = int(
                 final["routes"][0]["summary"]["lengthInMeters"]
             ) / 1000
             self.minutes = int(
                 final["routes"][0]["summary"]["travelTimeInSeconds"]
             ) / 60
-            validation_box.configure(text="Valid address," +
+            validation_box.configure(text="Valid address, " +
             "please choose a transportation method.")
             car_button._state = 'normal'
+            walk_button._state = 'normal'
+            bike_button._state = 'normal'
+            bus_button._state = 'normal'
         except:
             validation_box.configure(text="Invalid address. Input again.")
             car_button._state = 'disabled'
+            walk_button._state = 'disabled'
+            bike_button._state = 'disabled'
+            bus_button._state = 'disabled'
+            
            
 
 API_KEY = "OHxATlRctIBu8dHAiRIggj3pzhPGGKhj"
 
-map_placeholder =CTkImage(Image.open("116FBDD6-F6B9-4C9B-A5D3-F2B33760A688.jpg")
-, size=(400,400))
 #sets appearance mode same as system(doesn't matter much as I only have one)
 set_appearance_mode("System")  
 set_default_color_theme("theme.json")  
@@ -193,19 +198,19 @@ def window (material):
 #Opens an information window of the different material buttons
 
     #Closes window when close button pressed
-    def bye():  
-        woof.destroy()
-        woof.update()
+    def close_window():  
+        mat_window.destroy()
+        mat_window.update()
 
-    woof = CTkToplevel(root)
-    woof.grid_columnconfigure(0, weight=1)
-    woof.grid_rowconfigure(0, weight=1)
-    woof.attributes("-topmost", True)
-    woof.geometry("700x500")
-    woof_bye = CTkButton(woof, text="Close", font = ('Ebrima', 30), 
-    command = bye, width=20, height=20)
-    woof_bye.grid(row=1, column=0, pady=5, sticky="s")
-    label = CTkLabel(woof, text=material, text_color="#DCE4EE", 
+    mat_window = CTkToplevel(root)
+    mat_window.grid_columnconfigure(0, weight=1)
+    mat_window.grid_rowconfigure(0, weight=1)
+    mat_window.attributes("-topmost", True)
+    mat_window.geometry("700x500")
+    mat_window_close = CTkButton(mat_window, text="Close", font = ('Ebrima', 30), 
+    command = close_window, width=20, height=20)
+    mat_window_close.grid(row=1, column=0, pady=5, sticky="s")
+    label = CTkLabel(mat_window, text=material, text_color="#DCE4EE", 
     corner_radius=10,
     font = ('Ebrima', 20), width = 50)
     label.grid(row=0, column=0, pady=10, )
@@ -247,16 +252,6 @@ def power_info(power, power_information):
     font =('Ebrima', 20))
 
 root.grid_rowconfigure((0, 1, 2), weight=1)
-
-#Sidebar for homepage
-sidebar_frame = CTkFrame(root, width=140, height=200, corner_radius=0)
-sidebar_frame.grid(row=0, column=0, rowspan=2, sticky="nsew")
-sidebar_frame.grid_rowconfigure(2, weight=1)
-logo_label = CTkLabel(sidebar_frame, text="CustomTkinter", 
-font=CTkFont(size=20, weight="bold"))
-logo_label.grid(row=0, column=0, pady=5)
-buttontt = CTkButton(sidebar_frame, text="shsf")
-buttontt.grid(row=1, column=0, pady=5)
 
 #Creates the three different tabs
 tabview = CTkTabview(root, width=900, height=700)
@@ -334,22 +329,22 @@ transportation_button_title.grid(row=0, column=0, pady=10, sticky="n")
 
 car_button = CTkButton(transportation_method_frame, text="Car", width=100, 
 height=50, 
-command=transportation_car_info)
+command=transportation_car_info, state='disabled')
 car_button.grid(row=1, column=0, pady=5, padx=10, sticky="w")
 walk_button = CTkButton(transportation_method_frame, text="Walk", width=100, 
 height=50, 
-command=transportation_walk_info)
+command=transportation_walk_info, state='disabled')
 walk_button.grid(row=2, column=0, pady=5, padx=10, sticky="w")
 bike_button = CTkButton(transportation_method_frame, text="Bike", width=100, 
-height=50, command=transportation_bike_info)
+height=50, command=transportation_bike_info, state='disabled')
 bike_button.grid(row=3, column=0, pady=5, padx=10, sticky="w")
 bus_button = CTkButton(transportation_method_frame, text="Bus", width=100, 
-height=50, command=transportation_bus_info)
+height=50, command=transportation_bus_info, state='disabled')
 bus_button.grid(row=4, column=0, pady=5, padx=10, sticky="w")
 #Transportation method buttons
 
 validation_box = CTkLabel(transportation_method_frame, text = "", 
-text_color="#DCE4EE")
+text_color="#DCE4EE", font = ('Ebrima', 15))
 validation_box.grid(row=3, column=2, sticky="n")
 
 transport_rec = CTkLabel(tabview.tab("Transportation"), text = "", 
