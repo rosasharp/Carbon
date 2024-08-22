@@ -387,24 +387,24 @@ text_color="#DCE4EE")
 power_information.grid(row = 5, column=2)
 
 solar_button= CTkButton(tabview.tab("Power"), text = "Solar Power", 
-command= lambda: power_info("Solar Power", power_information))
+command= lambda: power_info("Solar Power", power_information), state='disabled')
 solar_button.grid(row=3, column=1, pady=20)
 
 hydro_button = CTkButton(tabview.tab("Power"), text = "Hydro Power", 
-command = lambda: power_info("Hydro Power", power_information))
+command = lambda: power_info("Hydro Power", power_information),state='disabled')
 hydro_button.grid(row=4, column=1, pady=20)
 
 wind_power_button = CTkButton(tabview.tab("Power"), text = "Wind Power", 
-command = lambda: power_info("Wind Power", power_information))
+command = lambda: power_info("Wind Power", power_information),state='disabled')
 wind_power_button.grid(row=5, column=1, pady=20)
 #Power type buttons to display the information about them
 
 geothermal_button = CTkButton(tabview.tab("Power"), text = "Geothermal Power", 
-command = lambda: power_info("Geothermal Power", power_information))
+command = lambda: power_info("Geothermal Power", power_information),state='disabled')
 geothermal_button.grid(row=6, column=1, pady=20)
 
 bioenergy_button = CTkButton(tabview.tab("Power"), text = "Bio Power", 
-command = lambda: power_info("Bio Power", power_information))
+command = lambda: power_info("Bio Power", power_information),state='disabled')
 bioenergy_button.grid(row=7, column=1, pady=20)
 power_availablility = CTkLabel(tabview.tab("Power"), text = "", 
 text_color="#DCE4EE")
