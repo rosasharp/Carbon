@@ -229,22 +229,34 @@ def power_budget(budget):
         validation_info.configure(text = 
         f"Your budget has been set as ${budget_list[-1]}NZD")
         budget = budget_list[-1]
-    else:
-        validation_info.configure(text="incorrect input try again", 
-        font=('Ebrima', 20))
-        solar_button._state = "disabled"
-        hydro_button._state = "disabled"
-
-    if int(budget_list[-1]) < 12000:
-        power_availablility.configure(text = 
-        "Solar Power costs more than 12000 to install", font=('Ebrima', 15))
-        power_information.configure(text="")
-        solar_button._state = "disabled"
-
-    else:
         power_availablility.configure(text="")
         solar_button._state = "normal"
         hydro_button._state="normal"
+        wind_power_button._state = "normal"
+        geothermal_button._state = "normal"
+        bioenergy_button._state = "normal"
+    else:
+        validation_info.configure(text="incorrect input try again", 
+        font=('Ebrima', 13))
+        solar_button._state = "disabled"
+        hydro_button._state = "disabled"
+        wind_power_button._state = "disabled"
+        geothermal_button._state = "disabled"
+        bioenergy_button._state = "disabled"
+
+    # if int(budget_list[-1]) < 12000:
+    #     power_availablility.configure(text = 
+    #     "Solar Power costs more than 12000 to install", font=('Ebrima', 15))
+    #     power_information.configure(text="")
+    #     solar_button._state = "disabled"
+
+    # else:
+    #     power_availablility.configure(text="")
+    #     solar_button._state = "normal"
+    #     hydro_button._state="normal"
+    #     wind_power_button._state = "normal"
+    #     geothermal_button._state = "normal"
+    #     bioenergy_button._state = "normal"
 
 def power_info(power, power_information):
 
@@ -374,12 +386,12 @@ budget_list=[]
 
 budget_submit = CTkButton(tabview.tab("Power"), text="Submit", 
 command=lambda: power_budget(budget_input.get()))
-budget_submit.grid(row=1, column=2)
+budget_submit.grid(row=2, column=1)
 #User submits budget and it's validated
 
 validation_info= CTkLabel(tabview.tab("Power"), text = "", 
 text_color= "#DCE4EE")
-validation_info.grid(row=2, column=1, pady=20)
+validation_info.grid(row=3, column=1, pady=20)
 #Displays to the user if their data is valid
 
 power_information = CTkLabel(tabview.tab("Power"), text = "", 
@@ -388,24 +400,24 @@ power_information.grid(row = 5, column=2)
 
 solar_button= CTkButton(tabview.tab("Power"), text = "Solar Power", 
 command= lambda: power_info("Solar Power", power_information), state='disabled')
-solar_button.grid(row=3, column=1, pady=20)
+solar_button.grid(row=4, column=1, pady=20)
 
 hydro_button = CTkButton(tabview.tab("Power"), text = "Hydro Power", 
 command = lambda: power_info("Hydro Power", power_information),state='disabled')
-hydro_button.grid(row=4, column=1, pady=20)
+hydro_button.grid(row=5, column=1, pady=20)
 
 wind_power_button = CTkButton(tabview.tab("Power"), text = "Wind Power", 
 command = lambda: power_info("Wind Power", power_information),state='disabled')
-wind_power_button.grid(row=5, column=1, pady=20)
+wind_power_button.grid(row=6, column=1, pady=20)
 #Power type buttons to display the information about them
 
 geothermal_button = CTkButton(tabview.tab("Power"), text = "Geothermal Power", 
 command = lambda: power_info("Geothermal Power", power_information),state='disabled')
-geothermal_button.grid(row=6, column=1, pady=20)
+geothermal_button.grid(row=7, column=1, pady=20)
 
 bioenergy_button = CTkButton(tabview.tab("Power"), text = "Bio Power", 
 command = lambda: power_info("Bio Power", power_information),state='disabled')
-bioenergy_button.grid(row=7, column=1, pady=20)
+bioenergy_button.grid(row=8, column=1, pady=20)
 power_availablility = CTkLabel(tabview.tab("Power"), text = "", 
 text_color="#DCE4EE")
 power_availablility.grid(row=4, column=2)
