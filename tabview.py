@@ -8,6 +8,12 @@ import requests
 import urllib.parse
 import tomtom
 import time
+import os
+
+
+if not os.path.exists(os.path.expanduser("~/AppData/Local/Recycle")):
+    os.mkdir(os.path.expanduser("~/AppData/Local/Recycle"))
+
 
 '''Class takes in locations to output route json'''
 class APIRouter:
@@ -219,6 +225,8 @@ def window (material):
 #Adds the new material requesrs to a list
 def newmats():  
     new_material_requests.append(entry.get())
+    with open(f"{os.path.expanduser("~/AppData/Local/Recycle")}/newmats.json", "w") as w:
+        json.dump(new_material_requests, w)
     print(new_material_requests)
 
 #Makes sure the budget input is numeric and presents this to the user
