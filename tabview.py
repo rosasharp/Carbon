@@ -224,10 +224,17 @@ def window (material):
 
 #Adds the new material requesrs to a list
 def newmats():  
-    new_material_requests.append(entry.get())
-    with open(f"{os.path.expanduser("~/AppData/Local/Recycle")}/newmats.json", "w") as w:
-        json.dump(new_material_requests, w)
-    print(new_material_requests)
+    if entry.get() == "":
+        mat_validation.configure(text="invalid, field is empty")
+    elif not entry.get().isnumeric():
+        new_material_requests.append(entry.get())
+        with open(f"{os.path.expanduser("~/AppData/Local/Recycle")}/newmats.json", "w") as w:
+            json.dump(new_material_requests, w)
+        print(new_material_requests)
+        mat_validation.configure(text="")
+    else: 
+        mat_validation.configure(text="invalid, please enter letters only")
+
 
 #Makes sure the budget input is numeric and presents this to the user
 def power_budget(budget): 
@@ -299,6 +306,9 @@ new_material = CTkButton(tabview.tab("Recycling"), text="Submit",
 command=newmats)
 new_material.pack(pady=10)
 #Button to submit the new material to a list
+
+mat_validation = CTkLabel(tabview.tab("Recycling"), text = "", text_color="#DCE4EE")
+mat_validation.pack(pady=10)
 
 print(entry.get())
 
