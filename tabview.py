@@ -11,8 +11,8 @@ import time
 import os
 
 
-if not os.path.exists(os.path.expanduser("~/AppData/Local/Recycle")):
-    os.mkdir(os.path.expanduser("~/AppData/Local/Recycle"))
+if not os.path.exists(os.path.expanduser('~/Library/Caches/Recycle')):
+    os.mkdir(os.path.expanduser('~/Library/Caches/Recycle'))
 
 
 '''Class takes in locations to output route json'''
@@ -133,25 +133,26 @@ else. It’s only slightly unreliable sometimes, depending on location.''',
 
 
 }
-#Changes text box on transportation tab to car information
+'''Changes text box on transportation tab to car information'''
 def transportation_car_info(): 
+    #Finds distance and time for car journeys
     transportation_info.configure(text=(
     f"Your destination is {round(router.kilometers, 2)} kilometers away and " +
     f"it will take {round(router.minutes,2)} minutes to get there."
     ))
-
+    #Makes walking recommendation because of short distances
     if router.kilometers < 3:
         transport_rec.configure(text = 
     '''Because this journey is less than 3km away, 
     walking would be the most carbon friendly mode of of transportation. 
     Select the walk option to see how long it will take.''')
-        
+    #Makes biking recommendation because of short/med distances
     elif router.kilometers <6: 
         transport_rec.configure(text = 
     '''Because this journey is less than 6km away, 
     biking would be the most carbon friendly mode of of transportation. 
     Select the bike option to see how long it will take.''')
-        
+    #Gives information about other methods for long journeys   
     else:
         transport_rec.configure(text='''
         Although driving is the most common form of transportation, 
@@ -160,50 +161,56 @@ def transportation_car_info():
         walking or biking. For longer journeys, public transportation 
         is another more carbon friendly option.''')
 
-#Changes text box on transportation tab to walking information
+'''Changes text box on transportation tab to walking information'''
 def transportation_walk_info():
+    #Finds time for walking using researched time calculation
     time_in_minutes=int(router.kilometers)*4.8 
     transportation_info.configure(text=(
     f"Your destination is {round(router.kilometers, 2)} kilometers away and" +
     f" it will take {round(time_in_minutes, 2)} minutes to get there."
     ))
+    #Gives recommendation about why walking is a sustainable method
     transport_rec.configure(text = ''' 
     Walking is a very carbon efficient mode of transportation, 
     producing no carbon footprint and allowing for excercise. 
     For journeys less than 3km, this is highly recommended.''')
   
-#Changes text box on transportation tab to biking information
+'''Changes text box on transportation tab to biking information'''
 def transportation_bike_info(): 
+    #Finds time for biking using researched time calculation
     time_in_minutes=int(router.kilometers)*1.7
     transportation_info.configure(text=(
     f"Your destination is {router.kilometers} kilometers away and it will" +
     f" take {time_in_minutes} minutes to get there."
     ))
-    
+    #Gives recommendation about why biking is a sustainable method
     transport_rec.configure(text = ''' 
     Biking is a very carbon efficient mode of transportation, 
     producing no carbon footprint and allowing for excercise. 
     For journeys less than 6km, this is highly recommended.''')
 
+'''Changes text box on transportation to bus information'''
 def transportation_bus_info():
+    #Finds time for busing using researched time calculation
     time_in_minutes=int(router.kilometers)*2
     transportation_info.configure(text = (
     f"Your destination is {round(router.kilometers, 2)} kilometers away and " +
     f"it will take {round(time_in_minutes,2)} minutes to get there."))
-
+    #Gives recommendation about why busing is better than driving
     transport_rec.configure(text = ''' 
     Busing is more efficient than driving, as you are sharing the 
     carbon emissions amongst many people when on public transportation. 
     If you live by bus stops, and it is an option, 
     busing instead of taking one car is highly recommended.''')
 
+'''Displays the distance between locations to user'''
 def display_distance(distance):
     transportation_info.configure(text= distance)
 
+'''Opens an information window of the different material buttons'''
 def window (material):  
-#Opens an information window of the different material buttons
 
-    #Closes window when close button pressed
+    '''Closes window when close button pressed'''
     def close_window():  
         mat_window.destroy()
         mat_window.update()
@@ -222,23 +229,27 @@ def window (material):
     label.grid(row=0, column=0, pady=10, )
     label.configure(text = recyclable_mats_dictionary[material])
 
-#Adds the new material requesrs to a list
+'''Adds the new material requesrs to a list anf then adds it to a file'''
 def newmats():  
     if entry.get() == "":
         mat_validation.configure(text="invalid, field is empty")
+        #Won't submit an empty entry
     elif not entry.get().isnumeric():
         new_material_requests.append(entry.get())
-        with open(f"{os.path.expanduser("~/AppData/Local/Recycle")}/newmats.json", "w") as w:
+        with open(f"{os.path.expanduser('~/Library/Caches/Recycle')}/newmats.json", "w") as w:
             json.dump(new_material_requests, w)
         print(new_material_requests)
         mat_validation.configure(text="")
+        #Submits entry if it isn't numeric
     else: 
         mat_validation.configure(text="invalid, please enter letters only")
+        #Doesn't allow other (numeric) values to be submitted
 
 
-#Makes sure the budget input is numeric and presents this to the user
+'''Makes sure the budget input is numeric and presents this to the user'''
 def power_budget(budget): 
     if budget.isnumeric():
+        #Allows numeric entries to be valid and enable buttons
         budget_list.append(budget)
         print(budget_list)
         validation_info.configure(text = 
@@ -251,7 +262,8 @@ def power_budget(budget):
         geothermal_button._state = "normal"
         bioenergy_button._state = "normal"
     else:
-        validation_info.configure(text="incorrect input try again", 
+        #Doesn't allow non numbers, and disables buttons
+        validation_info.configure(text="Invalid input, try again", 
         font=('Ebrima', 13))
         solar_button._state = "disabled"
         hydro_button._state = "disabled"
@@ -272,7 +284,7 @@ def power_budget(budget):
     #     wind_power_button._state = "normal"
     #     geothermal_button._state = "normal"
     #     bioenergy_button._state = "normal"
-
+'''Shows the information about the power type selected'''
 def power_info(power, power_information):
 
     power_information.configure(text = power_method_dictionary[power], 
