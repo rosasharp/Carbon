@@ -10,7 +10,6 @@ import tomtom
 import time     
 import os
 
-
 if not os.path.exists(os.path.expanduser("~/AppData/Local/Recycle")):
     os.mkdir(os.path.expanduser("~/AppData/Local/Recycle"))
 
