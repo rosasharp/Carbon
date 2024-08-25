@@ -14,8 +14,10 @@ import os
 if not os.path.exists(os.path.expanduser("~/AppData/Local/Recycle")):
     os.mkdir(os.path.expanduser("~/AppData/Local/Recycle"))
 
-'''Class takes in locations to output route json'''
+
 class APIRouter:
+    '''Class takes in locations to output route json''' 
+
     def __init__(self):
         self.kilometers=0
         self.minutes=0
@@ -31,7 +33,7 @@ class APIRouter:
                 )
             with open("route.json", "w") as f:
                 json.dump(final, f)
-#uses information from json file for API for transportation function
+            #uses information from json file for API for transportation function
             #validation
             self.kilometers = int(
                 final["routes"][0]["summary"]["lengthInMeters"]
@@ -164,11 +166,11 @@ wind farms. It is very efficient, while also only costing $0.04-0.06 per kWh.
     The current use of biofuels in New Zealand is low, so it isn't very 
     accessible though, and it mainly used for industrial purposes and is 
     more expensive being between $0.8 to $0.15 kWh.'''
-
-
 }
-'''Changes text box on transportation tab to car information'''
+
 def transportation_car_info(): 
+    '''Changes text box on transportation tab to car information'''
+
     #Finds distance and time for car journeys
     transportation_info.configure(text=(
     f"Your destination is {round(router.kilometers, 2)} kilometers away and " +
@@ -195,8 +197,9 @@ def transportation_car_info():
         walking or biking. For longer journeys, public transportation 
         is another more carbon friendly option.''')
 
-'''Changes text box on transportation tab to walking information'''
 def transportation_walk_info():
+    '''Changes text box on transportation tab to walking information'''
+    
     #Finds time for walking using researched time calculation
     time_in_minutes=int(router.kilometers)*4.8 
     transportation_info.configure(text=(
@@ -209,8 +212,9 @@ def transportation_walk_info():
     producing no carbon footprint and allowing for excercise. 
     For journeys less than 3km, this is highly recommended.''')
   
-'''Changes text box on transportation tab to biking information'''
 def transportation_bike_info(): 
+    '''Changes text box on transportation tab to biking information'''
+
     #Finds time for biking using researched time calculation
     time_in_minutes=int(router.kilometers)*1.7
     transportation_info.configure(text=(
@@ -223,8 +227,9 @@ def transportation_bike_info():
     producing no carbon footprint and allowing for excercise. 
     For journeys less than 6km, this is highly recommended.''')
 
-'''Changes text box on transportation to bus information'''
 def transportation_bus_info():
+    '''Changes text box on transportation to bus information'''
+    
     #Finds time for busing using researched time calculation
     time_in_minutes=int(router.kilometers)*2
     transportation_info.configure(text = (
@@ -237,15 +242,17 @@ def transportation_bus_info():
     If you live by bus stops, and it is an option, 
     busing instead of taking one car is highly recommended.''')
 
-'''Displays the distance between locations to user'''
 def display_distance(distance):
+    '''Displays the distance between locations to user'''
+
     transportation_info.configure(text= distance)
 
-'''Opens an information window of the different material buttons'''
 def window (material):  
+    '''Opens an information window of the different material buttons'''
 
-    '''Closes window when close button pressed'''
     def close_window():  
+        '''Closes window when close button pressed'''
+
         mat_window.destroy()
         mat_window.update()
 
