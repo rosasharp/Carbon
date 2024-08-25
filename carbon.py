@@ -271,15 +271,16 @@ def window (material):
     label.grid(row=0, column=0, pady=10, )
     label.configure(text = recyclable_mats_dictionary[material])
 
-'''Adds the new material requesrs to a list anf then adds it to a file'''
 def newmats():  
+    '''Adds the new material requesrs to a list anf then adds it to a file'''
+    
     if entry.get() == "":
         mat_validation.configure(text="invalid, field is empty")
         #Won't submit an empty entry
     elif not entry.get().isnumeric():
         new_material_requests.append(entry.get())
         with open(
-        f"{os.path.expanduser("~/AppData/Local/Recycle")}/newmats.json", "w"
+        f"{os.path.expanduser('~/AppData/Local/Recycle')}/newmats.json", "w"
         ) as w:
             json.dump(new_material_requests, w)
         print(new_material_requests)
