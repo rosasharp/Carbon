@@ -1,7 +1,6 @@
 from tkinter import *
 from customtkinter import *
 from functools import partial
-from PIL import Image
 
 import json
 import requests
@@ -125,11 +124,46 @@ power_method_dictionary = {
     "Solar Power": 
 '''Solar energy is very efficient as it works in all weather types, and 
 creates more than enough energy for heat, cooling, electricity and everything 
-else. It’s only slightly unreliable sometimes, depending on location.''',
-    "Hydro Power": "Hydro power stuff",
-    "Wind Power": "wind power stuff",
-    "Geothermal Power": "geothermal stuff",
-    "Bio Power": "bio power stuff"
+else. It’s only slightly unreliable sometimes, depending on location. 
+A negative aspect of solar power is that it can be quite expensive to install, 
+so for budgets lower than $12000, it mightn't be a possibility. 
+The cost is reduced over time though as you pay the initial installation fee and
+ then all the power is renewable. The initial cost for solar power is expensive,
+but it is worth it due to how it is renewable. Solar power costs $0.10 per kWh. 
+''',
+    "Hydro Power": 
+'''Hydro power already makes up 57 percent of power in New Zealand. 
+Hydroelectric schemes use gravity to drive water through turbines, 
+converting that energy into electricity. Water from streams, rivers or dams 
+flows down steep pipes into turbines, which drive power generators. 
+The water then flows back into a river or stream below the hydro plant. 
+Research if your power comes from a hydro power plant, as it is much more 
+environmentally friendly, while also being low-cost. 
+Hydro power costs $0.05 per kWh. ''',
+    "Wind Power": 
+'''Wind power or wind energy is a form of renewable energy that harnesses the 
+power of the wind to generate electricity. It involves using wind turbines to 
+convert the turning motion of blades, pushed by moving air (kinetic energy) 
+into electrical energy (electricity). Wind energy is typically more accessible 
+in rural areas where wind farms are, but New Zealand is currently growing its 
+wind farms. It is very efficient, while also only costing $0.04-0.06 per kWh.
+''',
+    "Geothermal Power": 
+    '''New Zealand has a number of geothermal areas as it sits over 2 active 
+    plates - the Indo-Australian and Pacific Plates. Geothermal energy has many 
+    benefits such as being relatively cost effective, reliable, sustainable, 
+    and relatively environmentally friendly. Geothermal energy is much better 
+    for the environment than the burning of fossil fuels. It is relatively 
+    easily accessible in New Zealand, and is very cost effective, as it 
+    is $0.07 per kWh''',
+    "Bio Power": 
+    '''Biopower technologies convert renewable biomass fuels into heat and 
+    electricity using processes similar to those used with fossil fuels. 
+    There are three ways to release the energy stored in biomass to produce 
+    biopower: burning, bacterial decay, and conversion to gas/liquid fuel. 
+    The current use of biofuels in New Zealand is low, so it isn't very 
+    accessible though, and it mainly used for industrial purposes and is 
+    more expensive being between $0.8 to $0.15 kWh.'''
 
 
 }
@@ -220,8 +254,8 @@ def window (material):
     mat_window.grid_rowconfigure(0, weight=1)
     mat_window.attributes("-topmost", True)
     mat_window.geometry("700x500")
-    mat_window_close = CTkButton(mat_window, text="Close", font = ('Ebrima', 30), 
-    command = close_window, width=20, height=20)
+    mat_window_close = CTkButton(mat_window, text="Close", 
+    font = ('Ebrima', 30), command = close_window, width=20, height=20)
     mat_window_close.grid(row=1, column=0, pady=5, sticky="s")
     label = CTkLabel(mat_window, text=material, text_color="#DCE4EE", 
     corner_radius=10,
@@ -236,7 +270,9 @@ def newmats():
         #Won't submit an empty entry
     elif not entry.get().isnumeric():
         new_material_requests.append(entry.get())
-        with open(f"{os.path.expanduser('~/Library/Caches/Recycle')}/newmats.json", "w") as w:
+        with open(
+        f"{os.path.expanduser('~/Library/Caches/Recycle')}/newmats.json", "w"
+        ) as w:
             json.dump(new_material_requests, w)
         print(new_material_requests)
         mat_validation.configure(text="")
@@ -270,6 +306,7 @@ def power_budget(budget):
         wind_power_button._state = "disabled"
         geothermal_button._state = "disabled"
         bioenergy_button._state = "disabled"
+        power_information.configure(text="")
 
     # if int(budget_list[-1]) < 12000:
     #     power_availablility.configure(text = 
@@ -319,7 +356,8 @@ command=newmats)
 new_material.pack(pady=10)
 #Button to submit the new material to a list
 
-mat_validation = CTkLabel(tabview.tab("Recycling"), text = "", text_color="#DCE4EE")
+mat_validation = CTkLabel(tabview.tab("Recycling"), text = "", 
+text_color="#DCE4EE")
 mat_validation.pack(pady=10)
 
 print(entry.get())
@@ -442,7 +480,8 @@ wind_power_button.grid(row=6, column=1, pady=20)
 #Power type buttons to display the information about them
 
 geothermal_button = CTkButton(tabview.tab("Power"), text = "Geothermal Power", 
-command = lambda: power_info("Geothermal Power", power_information),state='disabled')
+command = lambda: power_info("Geothermal Power", power_information),
+state='disabled')
 geothermal_button.grid(row=7, column=1, pady=20)
 
 bioenergy_button = CTkButton(tabview.tab("Power"), text = "Bio Power", 
