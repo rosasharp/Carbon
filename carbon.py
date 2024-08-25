@@ -21,6 +21,7 @@ class APIRouter:
     def __init__(self):
         self.kilometers=0
         self.minutes=0
+
     def route(self, location, destination, API_KEY, validation_box):
         try:
             final = tomtom.route(
@@ -199,7 +200,7 @@ def transportation_car_info():
 
 def transportation_walk_info():
     '''Changes text box on transportation tab to walking information'''
-    
+
     #Finds time for walking using researched time calculation
     time_in_minutes=int(router.kilometers)*4.8 
     transportation_info.configure(text=(
@@ -288,9 +289,9 @@ def newmats():
         mat_validation.configure(text="invalid, please enter letters only")
         #Doesn't allow other (numeric) values to be submitted
 
-
-'''Makes sure the budget input is numeric and presents this to the user'''
 def power_budget(budget): 
+    '''Makes sure the budget input is numeric and presents this to the user'''
+
     if budget.isnumeric():
         #Allows numeric entries to be valid and enable buttons
         budget_list.append(budget)
@@ -328,8 +329,9 @@ def power_budget(budget):
     #     wind_power_button._state = "normal"
     #     geothermal_button._state = "normal"
     #     bioenergy_button._state = "normal"
-'''Shows the information about the power type selected'''
+
 def power_info(power, power_information):
+    '''Shows the information about the power type selected'''
 
     power_information.configure(text = power_method_dictionary[power], 
     font =('Ebrima', 20))
