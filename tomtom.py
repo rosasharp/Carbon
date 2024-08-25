@@ -13,6 +13,7 @@ def route(API_KEY, add1, add2, vehicle, lp100k, type):
 
 
    ROUTE_URL = (
+      #Calculates route with coordinates
        "https://api.tomtom.com/routing/1/calculateRoute/" +
        str(coordinates) +
        "/json?" +
@@ -36,6 +37,7 @@ def geocode(API_KEY, address):
    response = requests.get(f"{API_URL}")
 
    latlong = [
+      #Uses latitude and longitude to find location
        response.json()["results"][0]["position"]["lat"],
        response.json()["results"][0]["position"]["lon"],
    ]

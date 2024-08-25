@@ -24,6 +24,7 @@ class APIRouter:
 
     def route(self, location, destination, API_KEY, validation_box):
         try:
+            #Uses information from json file for API for transportation function
             final = tomtom.route(
                 API_KEY,
             tomtom.geocode(API_KEY, location.get()),
@@ -34,14 +35,13 @@ class APIRouter:
                 )
             with open("route.json", "w") as f:
                 json.dump(final, f)
-            #uses information from json file for API for transportation function
-            #validation
             self.kilometers = int(
                 final["routes"][0]["summary"]["lengthInMeters"]
             ) / 1000
             self.minutes = int(
                 final["routes"][0]["summary"]["travelTimeInSeconds"]
             ) / 60
+            #Validation for location input
             validation_box.configure(text="Valid address, " +
             "please choose a transportation method.")
             car_button._state = 'normal'
@@ -59,10 +59,10 @@ class APIRouter:
 
 API_KEY = "OHxATlRctIBu8dHAiRIggj3pzhPGGKhj"
 
-#sets appearance mode same as system(doesn't matter much as I only have one)
+#Sets appearance mode same as system(doesn't matter much as I only have one)
 set_appearance_mode("System")  
+#Json file storage for the colours of my GUI
 set_default_color_theme("theme.json")  
-#json file storage for the colours of my GUI
 
 root = CTk()
 router = APIRouter()
@@ -71,14 +71,16 @@ root.title('CARBON')
 root.geometry('1200x700')
 
 recyclable_mats = [
+    #The list of materials for the scrollable frame of recycling materials
     ["paper towels", "tissues", "food waste"],
     ["number 1 plastics", "number 2 plastics", "number 3 plastics", 
      "number 4 plastics", "number 5 plastics", "number 6 plastics", 
      "number 7 plastics"],
     ["cans", "tins", "metals"]
-]#The list of materials for the scrollable frame of recycling materials
+]
 
 recyclable_mats_dictionary = { 
+    #Information about the materials
     "Paper towels": 
     '''Paper towels can be composted. Compost bins are a great thing to have, 
     to put food scraps in. It reduces waste and can be useful for gardening.''', 
@@ -121,9 +123,9 @@ recyclable_mats_dictionary = {
 especially for metal, so just search up nearest place to recycle the metal type
 near you. This or take to a waste transfer station.'''
 }
-#information about the materials
 
 power_method_dictionary = {
+    #Information about power types
     "Solar Power": 
 '''Solar energy is very efficient as it works in all weather types, and 
 creates more than enough energy for heat, cooling, electricity and everything 
@@ -275,9 +277,10 @@ def newmats():
     '''Adds the new material requesrs to a list anf then adds it to a file'''
     
     if entry.get() == "":
-        mat_validation.configure(text="invalid, field is empty")
         #Won't submit an empty entry
+        mat_validation.configure(text="invalid, field is empty")
     elif not entry.get().isnumeric():
+        #Submits entry if it isn't numeric
         new_material_requests.append(entry.get())
         with open(
         f"{os.path.expanduser('~/AppData/Local/Recycle')}/newmats.json", "w"
@@ -285,10 +288,9 @@ def newmats():
             json.dump(new_material_requests, w)
         print(new_material_requests)
         mat_validation.configure(text="")
-        #Submits entry if it isn't numeric
     else: 
-        mat_validation.configure(text="invalid, please enter letters only")
         #Doesn't allow other (numeric) values to be submitted
+        mat_validation.configure(text="invalid, please enter letters only")
 
 def power_budget(budget): 
     '''Makes sure the budget input is numeric and presents this to the user'''
@@ -316,20 +318,6 @@ def power_budget(budget):
         geothermal_button._state = "disabled"
         bioenergy_button._state = "disabled"
         power_information.configure(text="")
-
-    # if int(budget_list[-1]) < 12000:
-    #     power_availablility.configure(text = 
-    #     "Solar Power costs more than 12000 to install", font=('Ebrima', 15))
-    #     power_information.configure(text="")
-    #     solar_button._state = "disabled"
-
-    # else:
-    #     power_availablility.configure(text="")
-    #     solar_button._state = "normal"
-    #     hydro_button._state="normal"
-    #     wind_power_button._state = "normal"
-    #     geothermal_button._state = "normal"
-    #     bioenergy_button._state = "normal"
 
 def power_info(power, power_information):
     '''Shows the information about the power type selected'''
@@ -361,10 +349,10 @@ entry.pack(pady=15)#grid(#row=3, column=2, pady=10)
 
 new_material_requests = []
 
+#Button to submit the new material to a list
 new_material = CTkButton(tabview.tab("Recycling"), text="Submit", 
 command=newmats)
 new_material.pack(pady=10)
-#Button to submit the new material to a list
 
 mat_validation = CTkLabel(tabview.tab("Recycling"), text = "", 
 text_color="#DCE4EE")
@@ -378,45 +366,45 @@ transportation_method_frame.grid(row=1, column=0, pady=5)
 transportation_method_frame.grid_columnconfigure(0, weight=1)
 transportation_method_frame.grid_rowconfigure(0, weight=1)
 
+#Transportation label with information about it
 transportation_info = CTkLabel(transportation_method_frame, text = "", 
 width=500, height=100, corner_radius=10, font = ('Ebrima', 20), 
 text_color= "#DCE4EE")
 transportation_info.grid(row=7, column=2, pady=5, padx=10, sticky="s")
-#Transportation label with information about it
 
+#User inputs location
 location_entry = CTkEntry(transportation_method_frame, 
 placeholder_text="Location:", width=500)
 location_entry.grid(row=4, column=2, pady=5, sticky="s")
-#User inputs location
 
+#User inputs destination
 destination_entry = CTkEntry(transportation_method_frame, 
 placeholder_text="Destination", width=500)
 destination_entry.grid(row=5, column=2, sticky="s")
-#User inputs destination
 
+#User submits location and destination
 location_entry_button = CTkButton(transportation_method_frame, 
 text="Submit", command= lambda: router.route(location_entry, destination_entry, 
 API_KEY, validation_box))
 location_entry_button.grid(row=6, column=2, sticky="s")
-#User submits location and destination
 
 locations_list = []
 
 
 #Frame for the transportation methods to be displatyed
-
 input_info = CTkLabel(transportation_method_frame, width=200, height=50, text = 
 "Please input the addresses as 'number street name, suburb, city'." +
  " Otherwise it won't be valid", 
 text_color= "#DCE4EE")
 input_info.grid(row=2, column=2, sticky="s")
 
+#Title above where transportation methods are
 transportation_button_title = CTkLabel(transportation_method_frame, 
 text = "Transportation Buttons", width=20, height=10, corner_radius=10, 
 font = ('Ebrima', 15))
 transportation_button_title.grid(row=0, column=0, pady=10, sticky="n")
-#Title above where transportation methods are
 
+#Transportation method buttons
 car_button = CTkButton(transportation_method_frame, text="Car", width=100, 
 height=50, 
 command=transportation_car_info, state='disabled')
@@ -431,7 +419,6 @@ bike_button.grid(row=3, column=0, pady=5, padx=10, sticky="w")
 bus_button = CTkButton(transportation_method_frame, text="Bus", width=100, 
 height=50, command=transportation_bus_info, state='disabled')
 bus_button.grid(row=4, column=0, pady=5, padx=10, sticky="w")
-#Transportation method buttons
 
 validation_box = CTkLabel(transportation_method_frame, text = "", 
 text_color="#DCE4EE", font = ('Ebrima', 15))
@@ -453,29 +440,29 @@ for mats in range(len(recyclable_mats)):
         
 mats_frame.pack(pady=5)
 mats_frame.pack(pady=5)
-#transportation_info.pack(pady=30)
 
+#Where user can input their power budget
 budget_input=CTkEntry(tabview.tab("Power"), placeholder_text="Power budget:", 
 width=150)
 budget_input.grid(row=1, column=1)
-#Where user can input their power budget
 
 budget_list=[]
 
+#User submits budget and it's validated
 budget_submit = CTkButton(tabview.tab("Power"), text="Submit", 
 command=lambda: power_budget(budget_input.get()))
 budget_submit.grid(row=2, column=1)
-#User submits budget and it's validated
 
+#Displays to the user if their data is valid
 validation_info= CTkLabel(tabview.tab("Power"), text = "", 
 text_color= "#DCE4EE")
 validation_info.grid(row=3, column=1, pady=20)
-#Displays to the user if their data is valid
 
 power_information = CTkLabel(tabview.tab("Power"), text = "", 
 text_color="#DCE4EE")
 power_information.grid(row = 5, column=2)
 
+#Power type buttons to display the information about them
 solar_button= CTkButton(tabview.tab("Power"), text = "Solar Power", 
 command= lambda: power_info("Solar Power", power_information), state='disabled')
 solar_button.grid(row=4, column=1, pady=20)
@@ -487,7 +474,6 @@ hydro_button.grid(row=5, column=1, pady=20)
 wind_power_button = CTkButton(tabview.tab("Power"), text = "Wind Power", 
 command = lambda: power_info("Wind Power", power_information),state='disabled')
 wind_power_button.grid(row=6, column=1, pady=20)
-#Power type buttons to display the information about them
 
 geothermal_button = CTkButton(tabview.tab("Power"), text = "Geothermal Power", 
 command = lambda: power_info("Geothermal Power", power_information),
