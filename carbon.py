@@ -10,8 +10,8 @@ import tomtom
 import time     
 import os
 
-if not os.path.exists(os.path.expanduser("~/AppData/Local/Recycle")):
-    os.mkdir(os.path.expanduser("~/AppData/Local/Recycle"))
+if not os.path.exists(os.path.expanduser("./Materials/Recycle")):
+    os.mkdir(os.path.expanduser("./Materials/Recycle"))
 
 
 class APIRouter:
@@ -282,7 +282,7 @@ def newmats():
         #Submits entry if it isn't numeric
         new_material_requests.append(entry.get())
         with open(
-        f"{os.path.expanduser('~/AppData/Local/Recycle')}/newmats.json", "w"
+        f"{os.path.expanduser('./Materials/Recycle')}/newmats.json", "w"
         ) as w:
             json.dump(new_material_requests, w)
         print(new_material_requests)
