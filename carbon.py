@@ -10,7 +10,7 @@ import tomtom
 import time     
 import os
 
-#Creates file for new materials
+# Creates file for new materials
 if not os.path.exists(os.path.expanduser("./Materials/Recycle")):
     os.mkdir(os.path.expanduser("./Materials/"))
     os.mkdir(os.path.expanduser("./Materials/Recycle"))
@@ -42,7 +42,8 @@ class APIRouter:
             self.minutes = int(
                 final["routes"][0]["summary"]["travelTimeInSeconds"]
             ) / 60
-            #Validation for location input
+            
+            # Validation for location input
             validation_box.configure(text="Valid address, " +
             "please choose a transportation method.")
             car_button._state = 'normal'
